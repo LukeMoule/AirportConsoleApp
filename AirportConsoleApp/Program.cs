@@ -23,12 +23,8 @@ namespace AirportConsoleApp
             {
                 var scraper = new WikiAirportScraper(url);
 
-                // Using XPath to select all rows except those with the class "sortbottom"
-                // position()>0 selects header row due to HTML weirdness
-                if (scraper.Scrape(
-                    headerXpath: "//*[@id=\"mw-content-text\"]/div[1]/table/tbody/tr[1]",
-                    rowsXpath: "//*[@id=\"mw-content-text\"]/div[1]/table/tbody/tr[position()>1 and not(contains(@class, \"sortbottom\"))]"
-                    ))
+                // Using XPath to select all table rows except those with the class "sortbottom"
+                if (scraper.Scrape("//*[@id=\"mw-content-text\"]/div[1]/table//tr[position()>0 and not(contains(@class, \"sortbottom\"))]"))
                 {
                     Console.WriteLine("success");
                 }
