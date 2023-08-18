@@ -1,7 +1,11 @@
 ﻿/*
-TODO: wikipedia includes random extras in the column: see VELP, PAAK
 TODO: improve column assignment
 TODO: excel character encoding
+
+Issues with wiki data scraping:
+Two columns randomly combined into one / columns missing
+includes random extras such as superscript links in the data field: see VELP, PAAK
+coordinate data requires an extra HTML request
  */
 using CsvHelper;
 using System.Globalization;
