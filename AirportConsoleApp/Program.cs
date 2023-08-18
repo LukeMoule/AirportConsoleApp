@@ -1,4 +1,8 @@
-﻿
+﻿/*
+TODO: wikipedia includes random extras in the column: see VELP, PAAK
+TODO: improve column assignment
+TODO: excel character encoding
+ */
 using CsvHelper;
 using System.Globalization;
 
@@ -24,13 +28,12 @@ namespace AirportConsoleApp
                 var records = scraper.Scrape("//*[@id=\"mw-content-text\"]/div[1]/table//tr[position()>1 and not(contains(@class, \"sortbottom\"))]");
 
                 string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-                string csvFolder = Path.Combine(baseDirectory, "Data", "CSV");
+                string csvFolder = Path.Combine(baseDirectory, "data", "csv");
                 if (!Directory.Exists(csvFolder))
                 {
                     Directory.CreateDirectory(csvFolder);
                 }
                 string csvFile = Path.Combine(csvFolder, $"airports_{c}.csv");
-                Console.WriteLine(csvFile);
                 
                 using (var writer = new StreamWriter(csvFile))
                 using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))

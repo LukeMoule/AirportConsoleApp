@@ -27,15 +27,12 @@ namespace AirportConsoleApp
 
                 var airport = new Airport
                 {
-                    Iata = ParseNode(cols[0]),
-                    Icao = ParseNode(cols[1]),
+                    IATA = ParseNode(cols[0]),
+                    ICAO = ParseNode(cols[1]),
                     AirportName = ParseNode(cols[2]),
-                    LocationServed = ParseNode(cols[3]),
-                    Time = ParseNode(cols[4]),
-                    Dst = ParseNode(cols[5])
+                    LocationServed = ParseNode(cols[3])
                 };
                 airports.Add(airport);
-                Console.WriteLine(airport);
             }
             return airports;
         }
