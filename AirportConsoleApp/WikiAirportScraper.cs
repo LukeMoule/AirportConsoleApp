@@ -1,45 +1,48 @@
 ﻿using HtmlAgilityPack;
+using System.Security.Cryptography;
 
 namespace AirportConsoleApp
 {
     internal class WikiAirportScraper
     {
-        private string url;
+        private string _url;
 
-        public WikiAirportScraper(string inUrl)
+        public WikiAirportScraper(string url)
         {
-            url = inUrl;
+            _url = url;
         }
 
-        public bool Scrape(string xpath)
+        public List<Airport> Scrape(string xpath)
         {
-            try
+            List<Airport> airports = new List<Airport>();
+
+            var web = new HtmlWeb();
+            var document = web.Load(_url);
+
+            var rows = document.DocumentNode.SelectNodes(xpath);
+            foreach (var row in rows)
             {
-                var web = new HtmlWeb();
 
-                // downloading to the target page
-                // and parsing its HTML content
-                var document = web.Load(url);
-                var nodes = document.DocumentNode.SelectNodes(xpath);
+                var cols = row.SelectNodes("*");
 
-                foreach (var node in nodes)
+                var airport = new Airport
                 {
-                    var childNodes = node.SelectNodes("*");
-                    foreach (var child in childNodes)
-                    {
-                        Console.Write("|");
-                        Console.Write(HtmlEntity.DeEntitize(child.InnerText).Trim());
-                    }
-                    Console.WriteLine();
-                }
-                return true;
+                    Iata = ParseNode(cols[0]),
+                    Icao = ParseNode(cols[1]),
+                    AirportName = ParseNode(cols[2]),
+                    LocationServed = ParseNode(cols[3]),
+                    Time = ParseNode(cols[4]),
+                    Dst = ParseNode(cols[5])
+                };
+                airports.Add(airport);
+                Console.WriteLine(airport);
             }
-            catch
-            {
-                Console.WriteLine("Bad URL(s)");
-                return false;
-            }
+            return airports;
+        }
 
+        private string ParseNode(HtmlNode node)
+        {
+            return HtmlEntity.DeEntitize(node.InnerText).Trim();
         }
     }
 }

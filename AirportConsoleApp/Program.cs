@@ -1,4 +1,7 @@
 ﻿
+using CsvHelper;
+using System.Globalization;
+
 namespace AirportConsoleApp
 {
     internal class Program
@@ -10,23 +13,19 @@ namespace AirportConsoleApp
             const int ASCII_CODE_A = 65;
             const int LETTERS_IN_ALPHABET = 1;
 
-            string[] urls = new string[LETTERS_IN_ALPHABET];
-
-            for (int i= 0; i<urls.Length; i++)
+            for (int i= 0; i<LETTERS_IN_ALPHABET; i++)
             {
                 char c = Convert.ToChar(i+ASCII_CODE_A);
-                urls[i] = BASE_URL + c;
-            }
-
-            //scrape the URLs
-            foreach(string url in urls)
-            {
+                string url = BASE_URL + c;
                 var scraper = new WikiAirportScraper(url);
 
                 // Using XPath to select all table rows except those with the class "sortbottom"
-                if (scraper.Scrape("//*[@id=\"mw-content-text\"]/div[1]/table//tr[position()>0 and not(contains(@class, \"sortbottom\"))]"))
+                var records = scraper.Scrape("//*[@id=\"mw-content-text\"]/div[1]/table//tr[position()>1 and not(contains(@class, \"sortbottom\"))]");
+
+                using (var writer = new StreamWriter("test.csv"))
+                using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
                 {
-                    Console.WriteLine("success");
+                    csv.WriteRecords(records);
                 }
             }
             
