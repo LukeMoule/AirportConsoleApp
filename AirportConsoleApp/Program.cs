@@ -11,7 +11,7 @@ namespace AirportConsoleApp
             // create URLs
             const string BASE_URL = "https://en.wikipedia.org/wiki/List_of_airports_by_IATA_airport_code:_";
             const int ASCII_CODE_A = 65;
-            const int LETTERS_IN_ALPHABET = 1;
+            const int LETTERS_IN_ALPHABET = 26;
 
             for (int i= 0; i<LETTERS_IN_ALPHABET; i++)
             {
@@ -20,9 +20,19 @@ namespace AirportConsoleApp
                 var scraper = new WikiAirportScraper(url);
 
                 // Using XPath to select all table rows except those with the class "sortbottom"
+                // position()>1 ignores header row
                 var records = scraper.Scrape("//*[@id=\"mw-content-text\"]/div[1]/table//tr[position()>1 and not(contains(@class, \"sortbottom\"))]");
 
-                using (var writer = new StreamWriter("test.csv"))
+                string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                string csvFolder = Path.Combine(baseDirectory, "Data", "CSV");
+                if (!Directory.Exists(csvFolder))
+                {
+                    Directory.CreateDirectory(csvFolder);
+                }
+                string csvFile = Path.Combine(csvFolder, $"airports_{c}.csv");
+                Console.WriteLine(csvFile);
+                
+                using (var writer = new StreamWriter(csvFile))
                 using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
                 {
                     csv.WriteRecords(records);
