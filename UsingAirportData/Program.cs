@@ -19,9 +19,14 @@ namespace UsingAirportData
                 airportList = csv.GetRecords<Airport>().ToList();
             }
 
-            foreach (var airport in airportList)
+            var query1 =
+                from airport in airportList
+                where airport.elevation_ft == -9999
+                select airport;
+
+            foreach (var airport in query1)
             {
-                Console.WriteLine(airport);
+                Console.WriteLine(airport.name);
             }
         }
     }
@@ -31,8 +36,9 @@ namespace UsingAirportData
         {
             // Default mapping for fields
             AutoMap(CultureInfo.InvariantCulture);
-            // if elevation_ft field is empty, default to 0
-            Map(x => x.elevation_ft).Default(0);
+            // if elevation_ft field is empty, default to -9999
+            // better way to do this?
+            Map(x => x.elevation_ft).Default(-9999);
         }
     }
 }

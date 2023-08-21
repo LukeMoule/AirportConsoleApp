@@ -10,6 +10,7 @@ namespace UsingAirportData
 {
     internal class Airport
     {
+        // Possible to generate this from csv headers?
         public int id { get; set; }
         public string? ident { get; set; }
         public string? type { get; set; }
