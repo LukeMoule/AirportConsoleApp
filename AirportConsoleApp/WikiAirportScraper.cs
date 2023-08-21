@@ -5,24 +5,37 @@ namespace AirportConsoleApp
 {
     internal class WikiAirportScraper
     {
-        private string _url;
+        private string[] _urls;
+        private string _xpath;
 
-        public WikiAirportScraper(string url)
+        public WikiAirportScraper(string[] urls, string xpath)
         {
-            _url = url;
+            _urls = urls;
+            _xpath = xpath;
         }
 
-        public List<Airport> Scrape(string xpath)
+        public List<Airport> Scrape()
+        {
+            List<Airport> output = new List<Airport>();
+
+            foreach (string url in _urls)
+            {
+                List<Airport> airportList = ScrapeOne(url);
+                output.AddRange(airportList);
+            }
+            return output;
+        }
+
+        private List<Airport> ScrapeOne(string url)
         {
             List<Airport> airports = new List<Airport>();
 
             var web = new HtmlWeb();
-            var document = web.Load(_url);
+            var document = web.Load(url);
 
-            var rows = document.DocumentNode.SelectNodes(xpath);
+            var rows = document.DocumentNode.SelectNodes(_xpath);
             foreach (var row in rows)
             {
-
                 var cols = row.SelectNodes("*");
 
                 var airport = new Airport
