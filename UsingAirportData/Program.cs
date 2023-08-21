@@ -19,15 +19,19 @@ namespace UsingAirportData
                 airportList = csv.GetRecords<Airport>().ToList();
             }
 
-            var query1 =
-                from airport in airportList
-                where airport.elevation_ft == -9999
-                select airport;
+            AirportData CentralAirportData = new AirportData(airportList);
 
-            foreach (var airport in query1)
-            {
-                Console.WriteLine(airport.name);
-            }
+            //var query1 =
+            //    from airport in airportList
+            //    where airport.elevation_ft == -9999
+            //    select airport;
+
+            //foreach (var airport in query1)
+            //{
+            //    Console.WriteLine(airport.name);
+            //}
+
+            UserInterface.Start();
         }
     }
     internal class AirportMap : ClassMap<Airport>
