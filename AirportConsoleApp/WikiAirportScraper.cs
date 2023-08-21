@@ -1,4 +1,5 @@
 ﻿using HtmlAgilityPack;
+using System;
 using System.Security.Cryptography;
 
 namespace AirportConsoleApp
@@ -23,6 +24,19 @@ namespace AirportConsoleApp
                 List<Airport> airportList = ScrapeOne(url);
                 output.AddRange(airportList);
             }
+            return output;
+        }
+
+        public List<Airport>[] ScrapeIndividually()
+        {
+            List<Airport>[] output = new List<Airport>[_urls.Length];
+
+            for (int i=0; i<output.Length; i++)
+            {
+                List<Airport> airportList = ScrapeOne(_urls[i]);
+                output[i] = airportList;
+            }
+
             return output;
         }
 
