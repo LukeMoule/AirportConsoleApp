@@ -7,8 +7,9 @@ Two columns randomly combined into one / columns missing
 includes random extras such as superscript links in the data field: see VELP, PAAK
 coordinate data requires an extra HTML request
  */
-using CsvHelper;
-using System.Globalization;
+
+
+using System;
 
 namespace AirportConsoleApp
 {
@@ -24,30 +25,21 @@ namespace AirportConsoleApp
             const string BASE_URL = "https://en.wikipedia.org/wiki/List_of_airports_by_IATA_airport_code:_";
             const int ASCII_CODE_A = 65;
             const int LETTERS_IN_ALPHABET = 26;
-
+            
+            // Write a file for each letter of the alphabet
+            /*
             for (int i= 0; i<LETTERS_IN_ALPHABET; i++)
             {
                 char c = Convert.ToChar(i+ASCII_CODE_A);
                 string[] url = { BASE_URL + c };
                 var scraper = new WikiAirportScraper(url, xpath);
+                var airportList = scraper.Scrape();
 
-                
-                var records = scraper.Scrape();
-
-                string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-                string csvFolder = Path.Combine(baseDirectory, "data", "csv");
-                if (!Directory.Exists(csvFolder))
-                {
-                    Directory.CreateDirectory(csvFolder);
-                }
-                string csvFile = Path.Combine(csvFolder, $"airports_{c}.csv");
-                
-                using (var writer = new StreamWriter(csvFile))
-                using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
-                {
-                    csv.WriteRecords(records);
-                }
+                CsvWriter.Write(airportList, $"airports_{c}");
             }
+            */
+
+            // Write all airports into one file
             string[] urls = new string[LETTERS_IN_ALPHABET];
             for (int i = 0; i < LETTERS_IN_ALPHABET; i++)
             {
@@ -55,6 +47,10 @@ namespace AirportConsoleApp
                 string url = BASE_URL + c;
                 urls[i] = url;
             }
+            var scraper = new WikiAirportScraper(urls, xpath);
+            var airportList = scraper.Scrape();
+
+            CsvWriter.Write(airportList, $"airports");
         }
     }
 }
