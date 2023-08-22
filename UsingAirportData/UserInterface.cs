@@ -81,6 +81,50 @@ namespace UsingAirportData
             } while (!exit);
         }
     }
+    public interface IMenuComponent
+    {
+        string GetDisplayText();
+        void Action();
+    }
+    public class MainMenu : IMenuComponent
+    {
+        private string _displayText;
+        private List<IMenuComponent> _menuComponents;
+        public MainMenu(string displayText, List<IMenuComponent> menuComponents)
+        {
+            _displayText = displayText;
+            _menuComponents = menuComponents;
+        }
+        public string GetDisplayText()
+        {
+            return _displayText;
+        }
+        public void Action()
+        {
+            Console.WriteLine("Mainmenu");
+        }
+    }
+
+    public class ElevationSubMenu: IMenuComponent
+    {
+        private string _displayText;
+        private List<IMenuComponent> _menuComponents;
+        public ElevationSubMenu(string displayText, List<IMenuComponent> menuComponents)
+        {
+            _displayText = displayText;
+            _menuComponents = menuComponents;
+        }
+        public string GetDisplayText()
+        {
+            return _displayText;
+        }
+        public void Action()
+        {
+
+        }
+
+    }
+
 
     internal delegate void OptionFunction();
     internal class Option
