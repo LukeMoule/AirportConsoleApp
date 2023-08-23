@@ -12,21 +12,21 @@ namespace UsingAirportData
     {
         public static void Start()
         {
-            List<Option> options = new List<Option>
-            {
-                new Option{ Text = "Print foo", Func = () => {Console.WriteLine("FOO"); } },
-                new Option{ Text = "Print bar", Func = () => {Console.WriteLine("BAR"); } }
-            };
+            //List<Option> options = new List<Option>
+            //{
+            //    new Option{ Text = "Print foo", Func = () => {Console.WriteLine("FOO"); } },
+            //    new Option{ Text = "Print bar", Func = () => {Console.WriteLine("BAR"); } }
+            //};
 
-            MenuPage mainMenu = new MenuPage(options);
-            mainMenu.Display();
+            //MenuPage mainMenu = new MenuPage(options);
+            //mainMenu.Display();
 
-            bool exit = false;
-            do
-            {
-                var key = Console.ReadKey(true);
-                mainMenu.CheckInput(key);
-            } while (!exit);
+            //bool exit = false;
+            //do
+            //{
+            //    var key = Console.ReadKey(true);
+            //    mainMenu.CheckInput(key);
+            //} while (!exit);
             /*
             Console.Clear();
             Console.WriteLine("1. Show airports by elevation");
@@ -52,136 +52,154 @@ namespace UsingAirportData
                 }
             } while (!exit);
             */
+            List<IMenuComponent> empty = new List<IMenuComponent>();
+            FilterPage Name = new FilterPage("Name", "Enter string to filter name by:");
+            FilterPage Country = new FilterPage("Country", "Enter string to filter country by:");
+            FilterPage Continent = new FilterPage("Continent", "Enter string to filter continent by:");
+            MenuPage CompassMenu = new MenuPage("Display airports by cardinal direction");
+            MenuPage ElevationMenu = new MenuPage("Display airports by elevation");
+            MenuPage FiltersMenu = new MenuPage("Apply filters", new List<IMenuComponent> { Name,Country,Continent});
+            MenuPage DisplayMenu = new MenuPage("Display airports", new List<IMenuComponent> { ElevationMenu, CompassMenu});
+            MenuPage MainMenu = new MenuPage("", new List<IMenuComponent> { FiltersMenu, DisplayMenu});
+
+            FiltersMenu.AddComponents(new List<IMenuComponent> { MainMenu } );
+
+            Router.SetNextPage(MainMenu);
+            Router.Go();
         }
-        
-        private static void ElevationMenu()
+    }
+
+    public static class Router
+    {
+        private static Stack<IMenuComponent> pageStack = new Stack<IMenuComponent>();
+        private static bool exit = false;
+        public static void Exit()
+        {
+            exit = true;
+        }
+        public static void SetNextPage(IMenuComponent page)
+        {
+            pageStack.Push(page);
+        }
+        public static void Go()
+        {
+            while (!exit)
+            {
+                pageStack.Peek().Load();
+            } 
+        }
+    }
+
+    public class FilterPage : IMenuComponent
+    {
+        private string description;
+        private string content;
+        public FilterPage(string description, string content)
+        {
+            this.description = description;
+            this.content = content;
+        }
+        public string GetDescription()
+        {
+            return description;
+        }
+        public void Load()
         {
             Console.Clear();
-            Console.WriteLine("1. Display n highest elevation airports");
-            Console.WriteLine("2. Display n lowest elevation airports");
+            Console.WriteLine(content);
+            string? input = Console.ReadLine();
+        }
+    }
 
-            bool exit = false;
-            do
+    public class MenuPage : IMenuComponent
+    {
+        private string description;
+        private List<IMenuComponent> subComponents;
+        private IMenuComponent nextPage;
+        public MenuPage(string description, List<IMenuComponent> menuComponents)
+        {
+            // limit menucomponent to max. 9
+            this.description = description;
+            subComponents = new List<IMenuComponent>(menuComponents);
+            nextPage = this;
+        }
+        public MenuPage(string description) :
+            this(description, new List<IMenuComponent>())
+        { 
+        }
+        public string GetDescription()
+        {
+            return description;
+        }
+        public void AddComponents(List<IMenuComponent> menuComponents)
+        {
+            subComponents.AddRange(menuComponents);
+        }
+        public void Load()
+        {
+            Console.Clear();
+            WritePage();
+            while (ParseInput(Console.ReadKey(true).Key)) { }
+        }
+        private void WritePage()
+        {
+            for (int i = 0; i < subComponents.Count; i++)
             {
-                var key = Console.ReadKey(true);
-                switch (key.Key)
-                {
-                    case ConsoleKey.D1:
-                        ElevationMenu();
-                        break;
-                    case ConsoleKey.D2:
-                        Console.WriteLine("two");
-                        break;
-                    case ConsoleKey.Q:
-                        exit = true;
-                        break;
-                    default:
-                        break;
-                }
-            } while (!exit);
+                Console.WriteLine($"{i + 1}. {subComponents[i].GetDescription()}");
+            }
+            Console.WriteLine("Press <q> to exit...");
+        }
+        public bool ParseInput(ConsoleKey key)
+        {
+            
+            int index = Keys.Lookup(key);
+
+            if (index == -1)
+            {
+                Router.Exit();
+                return false;
+            }
+            if (index < subComponents.Count)
+            {
+                Router.SetNextPage(subComponents[index]);
+                return false;
+            }
+            return true;
         }
     }
     public interface IMenuComponent
     {
-        string GetDisplayText();
-        void Action();
-    }
-    public class MainMenu : IMenuComponent
-    {
-        private string _displayText;
-        private List<IMenuComponent> _menuComponents;
-        public MainMenu(string displayText, List<IMenuComponent> menuComponents)
-        {
-            _displayText = displayText;
-            _menuComponents = menuComponents;
-        }
-        public string GetDisplayText()
-        {
-            return _displayText;
-        }
-        public void Action()
-        {
-            Console.WriteLine("Mainmenu");
-        }
+        string GetDescription();
+        void Load();
     }
 
-    public class ElevationSubMenu: IMenuComponent
+    public class Keys
     {
-        private string _displayText;
-        private List<IMenuComponent> _menuComponents;
-        public ElevationSubMenu(string displayText, List<IMenuComponent> menuComponents)
+        private static readonly Dictionary<ConsoleKey, int> Dict = new Dictionary<ConsoleKey, int>
         {
-            _displayText = displayText;
-            _menuComponents = menuComponents;
-        }
-        public string GetDisplayText()
+            {ConsoleKey.D1, 0},
+            {ConsoleKey.D2, 1},
+            {ConsoleKey.D3, 2},
+            {ConsoleKey.D4, 3},
+            {ConsoleKey.D5, 4},
+            {ConsoleKey.D6, 5},
+            {ConsoleKey.D7, 6},
+            {ConsoleKey.D8, 7},
+            {ConsoleKey.D9, 8},
+            {ConsoleKey.Q, -1}
+        };
+
+        public static int Lookup(ConsoleKey key)
         {
-            return _displayText;
-        }
-        public void Action()
-        {
-
-        }
-
-    }
-
-
-    internal delegate void OptionFunction();
-    internal class Option
-    {
-        public String Text { get; set; }
-        public OptionFunction Func { get; set; }
-
-        public void Action()
-        {
-            Func();
-        }
-
-    }
-
-    internal class MenuPage
-    {
-        //contains options
-        //displays these options
-        List<Option> _options;
-
-        public MenuPage(List<Option> options)
-        {
-            _options = options;
-        }
-
-        public void Display()
-        {
-            for (int i = 0; i < _options.Count; i++)
+            try
             {
-                Console.Write((i+1) + ". ");
-                Console.WriteLine(_options[i].Text);
+                return Dict[key];
             }
-        }
-        public void CheckInput(ConsoleKeyInfo key)
-        {
-            int choice = KeyToInt(key);
-            Console.WriteLine(choice);
-            if (choice < _options.Count)
+            catch (Exception e)
             {
-                _options[choice-1].Action();
+                return 999;
             }
-        }
-
-        private int KeyToInt(ConsoleKeyInfo key)
-        {
-            const int D0_ID = 48;
-            const int D9_ID = 57;
-            int id = Convert.ToInt32(key.KeyChar);
-
-            if (id >= D0_ID && id <= D9_ID)
-            {
-                return Convert.ToInt32(key.KeyChar) - D0_ID;
-            }
-            else
-            {
-                return -1;
-            }
+            
         }
     }
 }

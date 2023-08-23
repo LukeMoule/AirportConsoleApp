@@ -15,6 +15,9 @@ namespace UsingAirportData
             allAirports = new List<Airport>(airportList);
             filteredAirports = new List<Airport>(airportList);
         }
-
+        public int NumFiltered()
+        {
+            return filteredAirports.Count;
+        }
     }
 }
