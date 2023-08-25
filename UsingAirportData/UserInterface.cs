@@ -60,7 +60,7 @@ namespace UsingAirportData
             MenuPage ElevationMenu = new MenuPage("Display airports by elevation");
             MenuPage FiltersMenu = new MenuPage("Apply filters", new List<IMenuComponent> { Name,Country,Continent});
             MenuPage DisplayMenu = new MenuPage("Display airports", new List<IMenuComponent> { ElevationMenu, CompassMenu});
-            MenuPage MainMenu = new MenuPage("", new List<IMenuComponent> { FiltersMenu, DisplayMenu});
+            MenuPage MainMenu = new MenuPage("Return to menu", new List<IMenuComponent> { FiltersMenu, DisplayMenu});
 
             FiltersMenu.AddComponents(new List<IMenuComponent> { MainMenu } );
 
