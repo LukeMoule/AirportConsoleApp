@@ -5,7 +5,9 @@ VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AirportConsoleApp", "AirportConsoleApp\AirportConsoleApp.csproj", "{92F393EB-2B03-46DD-B570-A967AB4EF5CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UsingAirportData", "UsingAirportData\UsingAirportData.csproj", "{1EF93B19-1E07-42C8-A00E-D406508F43F1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UsingAirportData", "UsingAirportData\UsingAirportData.csproj", "{1EF93B19-1E07-42C8-A00E-D406508F43F1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataScrapingV2", "DataScrapingV2\DataScrapingV2.csproj", "{C7999391-8BE9-4398-A9CE-B542D6E09AAA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{1EF93B19-1E07-42C8-A00E-D406508F43F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1EF93B19-1E07-42C8-A00E-D406508F43F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1EF93B19-1E07-42C8-A00E-D406508F43F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7999391-8BE9-4398-A9CE-B542D6E09AAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7999391-8BE9-4398-A9CE-B542D6E09AAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7999391-8BE9-4398-A9CE-B542D6E09AAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7999391-8BE9-4398-A9CE-B542D6E09AAA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
